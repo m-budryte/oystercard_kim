@@ -28,4 +28,50 @@ describe Oystercard do
       expect { subject.top_up(1) }.to raise_error "The new balance exceeds the limit of #{maximum_balance}!"
     end
   end
+
+  describe '#deduct' do
+    it 'has a method of deduct' do
+      expect(subject).to respond_to(:deduct).with(1).argument
+    end
+
+    it 'deducts a specific amount from the balance' do
+      subject.top_up(10)
+      expect(subject.deduct(5)).to eq 5
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'has a method of in_journey?' do
+      expect(subject).to respond_to(:in_journey?)
+    end
+
+    it 'is not journey by default' do
+      expect(subject.in_journey?).to eq false
+    end
+
+    it 'is initially not in a journey' do
+      expect(subject).not_to be_in_journey
+    end
+
+    it 'can touch in' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+  end
+  describe '#touch_in' do
+    it 'has a method of touch_in' do
+      expect(subject).to respond_to(:touch_in)
+    end
+  end
+
+  describe '#touch_out' do
+    it 'has a method of touch_out' do
+      expect(subject).to respond_to(:touch_out)
+    end
+
+    it 'can touch out' do
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
+  end
 end
