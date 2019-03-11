@@ -29,17 +29,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'has a method of deduct' do
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
-
-    it 'deducts a specific amount from the balance' do
-      subject.top_up(10)
-      expect(subject.deduct(5)).to eq 5
-    end
-  end
-
   describe '#in_journey?' do
     it 'has a method of in_journey?' do
       expect(subject).to respond_to(:in_journey?)
@@ -54,6 +43,7 @@ describe Oystercard do
     end
 
     it 'can touch in' do
+      subject.top_up(Oystercard::MAX_BALANCE)
       subject.touch_in
       expect(subject).to be_in_journey
     end
@@ -61,6 +51,10 @@ describe Oystercard do
   describe '#touch_in' do
     it 'has a method of touch_in' do
       expect(subject).to respond_to(:touch_in)
+    end
+
+    it 'raises an error if there is not enough money' do
+      expect { subject.touch_in }.to raise_error("Not enough money :(")
     end
   end
 
