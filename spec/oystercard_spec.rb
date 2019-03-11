@@ -1,5 +1,9 @@
 require 'oystercard'
 describe Oystercard do
+  it 'has an entry station nil by default' do
+    expect(subject.entry_station).to eq nil
+  end
+
   it 'has a var of "balance"' do
     expect(subject).to respond_to(:balance)
   end
@@ -30,6 +34,7 @@ describe Oystercard do
   end
 
   describe '#in_journey?' do
+    let(:station) { double :station }
     it 'has a method of in_journey?' do
       expect(subject).to respond_to(:in_journey?)
     end
@@ -44,21 +49,35 @@ describe Oystercard do
 
     it 'can touch in' do
       subject.top_up(Oystercard::MAX_BALANCE)
-      subject.touch_in
+      subject.touch_in(:station)
       expect(subject).to be_in_journey
     end
   end
   describe '#touch_in' do
+    before(:each) do
+    subject.top_up(Oystercard::MAX_BALANCE)
+    end
+
     it 'has a method of touch_in' do
-      expect(subject).to respond_to(:touch_in)
+      expect(subject).to respond_to(:touch_in).with(1).argument
     end
 
     it 'raises an error if there is not enough money' do
-      expect { subject.touch_in }.to raise_error("Not enough money :(")
+      subject.balance = 0
+      expect { subject.touch_in(:station) }.to raise_error("Not enough money :(")
+    end
+
+    it 'updates the entry station' do
+      subject.touch_in(:station)
+      expect(subject.entry_station).to eq :station
     end
   end
 
   describe '#touch_out' do
+    before(:each) do
+    subject.top_up(Oystercard::MAX_BALANCE)
+    end
+
     it 'has a method of touch_out' do
       expect(subject).to respond_to(:touch_out)
     end
@@ -67,5 +86,12 @@ describe Oystercard do
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
+
+    it 'forgets the entry station on touch out' do
+      subject.touch_in(:station)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
+    end
+
   end
 end
