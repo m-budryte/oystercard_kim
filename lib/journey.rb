@@ -1,7 +1,7 @@
 class Journey
-attr_accessor :journey
+attr_accessor :journey, :entry_station
 PENALTY = 6
-
+MINIMUM_FARE = 1
 
   def initialize
     @journey = { :entry_station => nil, :exit_station => nil}
@@ -11,20 +11,27 @@ PENALTY = 6
   def complete?
 
       if @journey[:exit_station] == nil 
-      return false
+        false
+      else
+        true  
       end 
 
   end
 
   def fare
-    PENALTY unless complete? 
-    
-
+    if !complete? 
+      PENALTY 
+    else 
+      MINIMUM_FARE
+    end 
   end 
+
+
 
   def exit(station)
  
     @journey
+
   end 
 
 

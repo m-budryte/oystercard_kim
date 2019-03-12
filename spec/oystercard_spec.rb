@@ -5,10 +5,6 @@ describe Oystercard do
   let(:station2) { double :station2 }
 
 
-  it 'has an entry station nil by default' do
-    expect(subject.entry_station).to eq nil
-  end
-
   it 'has a var of "balance"' do
     expect(subject).to respond_to(:balance)
   end

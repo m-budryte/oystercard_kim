@@ -1,6 +1,6 @@
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journey
+  attr_reader :balance, :journey
   attr_writer :balance
 
   MAX_BALANCE = 90
@@ -23,8 +23,6 @@ class Oystercard
 
   def touch_in(station)
     fail "Not enough money :(" if @balance < MIN_BALANCE
- 
-
     p @journey
     @journey.journey = { :entry_station => station, :exit_station => nil}
 
@@ -36,8 +34,6 @@ class Oystercard
     exit_station = station2
 
     @journey.journey[:exit_station]= station2
-    
-    @entry_station = nil
   end
 
   private

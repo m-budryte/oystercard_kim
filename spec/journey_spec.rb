@@ -3,6 +3,7 @@ require 'oystercard'
 
 describe Journey do
   let(:station) { double :station, zone: 1}
+  let(:station2) { double :station, zone: 1}
 
   it 'starts with empty journeys' do
     expect(subject.journey).to eq ({
@@ -22,9 +23,7 @@ describe Journey do
   #   expect(journey)
   # end
 
-  it 'has penalty fare' do 
-    expect(subject.fare).to eq Journey::PENALTY
-  end 
+
 
   # it 'deducts penalty fare for incomplete journey' do 
   #   oystercard
@@ -39,8 +38,34 @@ describe Journey do
   end 
 
 
+describe 'already touched in' do
   it 'has an entry station' do 
-    # expect(subject.entry_station).to eq 
+    subject.entry_station = station
+    expect(subject.entry_station).to eq station
   end
+
+  it 'has penalty fare and returns fare if not touched out' do 
+
+    subject.journey = { entry_station: station, exit_station: nil}
+    p subject.complete?
+    expect(subject.fare).to eq Journey::PENALTY
+  end 
+
+  before do 
+    subject.exit(station2)
+  end 
+
+  describe 'touched out at exit station' do
+    it 'calculates fare' do 
+      subject.journey = { entry_station: station, exit_station: station2}
+
+      expect(subject.fare).to eq 1
+    end 
+  end 
+
+
+end 
+
+
 
 end
