@@ -1,5 +1,10 @@
 require 'oystercard'
 describe Oystercard do
+
+  let(:station) { double :station }
+  let(:station2) { double :station2 }
+
+
   it 'has an entry station nil by default' do
     expect(subject.entry_station).to eq nil
   end
@@ -39,11 +44,17 @@ describe Oystercard do
       expect(subject).to respond_to(:in_journey?)
     end
 
-    it 'is not journey by default' do
-      expect(subject.in_journey?).to eq false
+
+    it 'is in journey after touched in' do
+      subject.top_up(Oystercard::MAX_BALANCE)
+      subject.touch_in(station)
+      expect(subject).to be_in_journey
     end
 
-    it 'is initially not in a journey' do
+    it 'is in journey after touched out' do
+      subject.top_up(Oystercard::MAX_BALANCE)
+      subject.touch_in(station)
+      subject.touch_out(station2)
       expect(subject).not_to be_in_journey
     end
 
@@ -83,15 +94,38 @@ describe Oystercard do
     end
 
     it 'can touch out' do
-      subject.touch_out
+      subject.touch_in(station)
+      subject.touch_out(station2)
       expect(subject).not_to be_in_journey
     end
 
-    it 'forgets the entry station on touch out' do
-      subject.touch_in(:station)
-      subject.touch_out
-      expect(subject.entry_station).to eq nil
+    # it 'forgets the entry station on touch out' do
+    #   subject.touch_in(station)
+    #   subject.touch_out(station)
+    #   expect(subject.entry_station).to eq nil
+    # end
+  end
+
+  describe 'journeys' do
+
+    before(:each) do
+      subject.top_up(Oystercard::MAX_BALANCE)
     end
 
+    it 'starts with empty journeys' do
+      expect(subject.journeys).to eq []
+    end
+
+    it 'journey stores entry_station and exit_station' do
+      subject.touch_in(station)
+      subject.touch_out(station2)
+
+      expect(subject.journeys).to eq [{:entry_station => station, :exit_station => station2}]
+
+    end
+
+
+    end
+
+
   end
-end
