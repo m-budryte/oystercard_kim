@@ -38,32 +38,32 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey?' do
-    let(:station) { double :station }
-    it 'has a method of in_journey?' do
-      expect(subject).to respond_to(:in_journey?)
-    end
+  # describe '#in_journey?' do
+  #   let(:station) { double :station }
+  #   it 'has a method of in_journey?' do
+  #     expect(subject).to respond_to(:in_journey?)
+  #   end
 
 
-    it 'is in journey after touched in' do
-      subject.top_up(Oystercard::MAX_BALANCE)
-      subject.touch_in(station)
-      expect(subject).to be_in_journey
-    end
+  #   it 'is in journey after touched in' do
+  #     subject.top_up(Oystercard::MAX_BALANCE)
+  #     subject.touch_in(station)
+  #     expect(subject).to be_in_journey
+  #   end
 
-    it 'is in journey after touched out' do
-      subject.top_up(Oystercard::MAX_BALANCE)
-      subject.touch_in(station)
-      subject.touch_out(station2)
-      expect(subject).not_to be_in_journey
-    end
+  #   it 'is in journey after touched out' do
+  #     subject.top_up(Oystercard::MAX_BALANCE)
+  #     subject.touch_in(station)
+  #     subject.touch_out(station2)
+  #     expect(subject).not_to be_in_journey
+  #   end
 
-    it 'can touch in' do
-      subject.top_up(Oystercard::MAX_BALANCE)
-      subject.touch_in(:station)
-      expect(subject).to be_in_journey
-    end
-  end
+  #   it 'can touch in' do
+  #     subject.top_up(Oystercard::MAX_BALANCE)
+  #     subject.touch_in(:station)
+  #     expect(subject).to be_in_journey
+  #   end
+  # end
   describe '#touch_in' do
     before(:each) do
     subject.top_up(Oystercard::MAX_BALANCE)
@@ -78,10 +78,7 @@ describe Oystercard do
       expect { subject.touch_in(:station) }.to raise_error("Not enough money :(")
     end
 
-    it 'updates the entry station' do
-      subject.touch_in(:station)
-      expect(subject.entry_station).to eq :station
-    end
+
   end
 
   describe '#touch_out' do
@@ -96,7 +93,6 @@ describe Oystercard do
     it 'can touch out' do
       subject.touch_in(station)
       subject.touch_out(station2)
-      expect(subject).not_to be_in_journey
     end
 
     # it 'forgets the entry station on touch out' do
@@ -112,20 +108,9 @@ describe Oystercard do
       subject.top_up(Oystercard::MAX_BALANCE)
     end
 
-    it 'starts with empty journeys' do
-      expect(subject.journeys).to eq []
-    end
-
-    it 'journey stores entry_station and exit_station' do
-      subject.touch_in(station)
-      subject.touch_out(station2)
-
-      expect(subject.journeys).to eq [{:entry_station => station, :exit_station => station2}]
-
-    end
-
 
     end
 
 
   end
+
